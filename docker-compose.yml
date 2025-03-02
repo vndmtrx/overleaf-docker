@@ -1,0 +1,96 @@
+version: '3.8'
+
+# Configuração do Overleaf Community Edition com MongoDB e Redis
+# Documentação completa disponível em: README.md
+# Licença: MIT License
+
+services:
+  # Serviço principal do Overleaf
+  sharelatex:
+    restart: always
+    image: sharelatex/sharelatex:latest
+    container_name: sharelatex
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "80:80"
+    stop_grace_period: 60s
+    volumes:
+      - overleaf_data:/var/lib/overleaf
+    environment:
+      OVERLEAF_APP_NAME: "Overleaf Edição AbnTeX/SBC"
+      OVERLEAF_NAV_TITLE: "Overleaf Edição AbnTeX/SBC"
+      OVERLEAF_MONGO_URL: mongodb://mongo/sharelatex
+      OVERLEAF_REDIS_HOST: redis
+      REDIS_HOST: redis
+      ENABLED_LINKED_FILE_TYPES: 'project_file,project_output_file'
+      ENABLE_CONVERSIONS: 'true'
+      EMAIL_CONFIRMATION_DISABLED: 'false'
+      SANDBOXED_COMPILES: 'true'
+      SANDBOXED_COMPILES_SIBLING_CONTAINERS: 'true'
+      SANDBOXED_COMPILES_HOST_DIR: '/var/lib/overleaf/data/compiles'
+      # Definir idioma padrão para português
+      OVERLEAF_SITE_LANGUAGE: 'pt'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - overleaf-network
+
+  # Banco de dados MongoDB
+  mongo:
+    restart: always
+    image: mongo:6.0
+    container_name: mongo
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: sharelatex
+    extra_hosts:
+      - mongo:127.0.0.1
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/sharelatex --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    command: >
+      bash -c "
+      echo 'rs.initiate({_id:\"overleaf\",members:[{_id:0,host:\"mongo:27017\"}]});' > /docker-entrypoint-initdb.d/init-replica.js &&
+      docker-entrypoint.sh mongod --replSet overleaf --bind_ip_all --port 27017
+      "
+    networks:
+      - overleaf-network
+
+  # Serviço de cache Redis
+  redis:
+    restart: always
+    image: redis:6.2
+    container_name: redis
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - overleaf-network
+
+# Volumes persistentes para armazenamento de dados
+volumes:
+  overleaf_data:
+    name: overleaf_data
+  mongo_data:
+    name: mongo_data
+  redis_data:
+    name: redis_data
+
+# Rede dedicada para os serviços
+networks:
+  overleaf-network:
+    driver: bridge
