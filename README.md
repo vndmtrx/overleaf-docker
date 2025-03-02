@@ -1,4 +1,4 @@
-# 🧪 Overleaf Community Edition - Ambiente Docker 🐳
+# 🧪 Overleaf Docker Edition 🐳
 
 🚀 Ambiente Docker pronto para uso do Overleaf Community Edition, permitindo edição colaborativa de documentos LaTeX diretamente no navegador!
 
