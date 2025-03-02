@@ -12,12 +12,6 @@
 - 💾 Persistência de dados através de volumes Docker
 - 🔒 Ambiente isolado e seguro para seus projetos acadêmicos
 
-### 🎓 Perfeito para:
-
-- Estudantes e pesquisadores trabalhando em teses, dissertações e artigos científicos
-- Instituições acadêmicas brasileiras que precisam de um servidor LaTeX próprio
-- Desenvolvedores que necessitam seguir as normas ABNT em suas documentações
-
 ## 📋 Pré-requisitos
 - Docker e Docker Compose instalados
 - Mínimo de 4GB de RAM recomendado
@@ -50,7 +44,7 @@ node modules/server-ce-scripts/scripts/create-user --admin --email=usuario@email
 
 **Observação**: O sistema não envia e-mail de confirmação. Anote a URL fornecida após a execução do comando para definir sua senha.
 
-### 4. Instalação de Pacotes LaTeX para os Templates ABNT2/SBC
+### 4. Instalação de Pacotes LaTeX para os Templates AbnTeX e SBC
 Execute estes comandos **na ordem exata**:
 
 ```bash
@@ -66,7 +60,7 @@ texhash
 updmap-sys
 ```
 
-## 📝 Utilizando os Templates ABNT2/SBC
+## 📝 Utilizando os Templates AbnTeX/SBC
 
 Ao carregar o template, preste atenção à codificação de caracteres. No arquivo `.tex` principal, você precisará escolher entre:
 
@@ -86,13 +80,13 @@ OU
 
 ### Backup dos Dados
 Os dados são persistidos através de volumes Docker:
-- `sharelatex_data`: Arquivos de projetos
+- `overleaf_data`: Arquivos de projetos
 - `mongo_data`: Banco de dados
 - `redis_data`: Cache do sistema
 
 Para fazer backup, use:
 ```bash
-docker run --rm -v sharelatex_data:/source -v /caminho/local:/dest -w /source busybox tar -czvf /dest/sharelatex_backup.tar.gz .
+docker run --rm -v overleaf_data:/source -v /caminho/local:/dest -w /source busybox tar -czvf /dest/overleaf_data.tar.gz .
 ```
 
 ### Acesso
@@ -112,5 +106,3 @@ Contribuições são sempre bem-vindas! Sinta-se à vontade para abrir issues ou
 ## 📄 Licença
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
-
-⭐ Clone, configure e comece a escrever seus documentos LaTeX em conformidade com as normas ABNT em minutos!
