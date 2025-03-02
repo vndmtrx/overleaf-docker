@@ -4,6 +4,8 @@
 
 📝 Este projeto oferece uma configuração completa do Docker Compose para executar sua própria instância do Overleaf, com suporte especial para os templates ABNT2 e SBC (Sociedade Brasileira de Computação).
 
+![Screenshot](image.png)
+
 ### ✨ Características:
 
 - 📦 Configuração completa com MongoDB e Redis
