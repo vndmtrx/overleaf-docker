@@ -46,7 +46,7 @@ node modules/server-ce-scripts/scripts/create-user --admin --email=usuario@email
 
 **Observação**: O sistema não envia e-mail de confirmação. Anote a URL fornecida após a execução do comando para definir sua senha.
 
-### 4. Instalação de Pacotes LaTeX para os Templates AbnTeX e SBC
+### 4. Instalação de Pacotes LaTeX, dependência para os Templates AbnTeX e SBC
 Execute estes comandos **na ordem exata**:
 
 ```bash
